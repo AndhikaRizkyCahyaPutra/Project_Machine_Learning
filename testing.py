@@ -1,5 +1,35 @@
-import numpy as np
+import pandas as pd
 
+# Membaca file yang diunggah
+file_path = 'enhanced_fever_medicine_recommendation.csv'
+data = pd.read_csv(file_path)
+
+# Mengecek nilai yang hilang dalam dataset
+missing_values = data.isnull().sum()
+
+# Memproses fitur kategorikal dengan one-hot encoding
+categorical_features = data.select_dtypes(include=['object']).columns
+data_encoded = pd.get_dummies(data, columns=categorical_features, drop_first=True)
+
+# Mengubah nilai True/False menjadi angka 1/0
+boolean_columns = data_encoded.select_dtypes(include=['bool']).columns
+data_encoded[boolean_columns] = data_encoded[boolean_columns].astype(int)
+
+# Normalisasi fitur numeri k (mengubah nilai ke skala 0-1)
+numeric_features = data.select_dtypes(include=['int64', 'float64']).columns
+data_encoded[numeric_features] = (data_encoded[numeric_features] - data_encoded[numeric_features].min()) / (
+    data_encoded[numeric_features].max() - data_encoded[numeric_features].min())
+
+data_after_preprocessing = data_encoded
+# print(data_after_preprocessing.to_string())
+
+# # Menampilkan nilai yang hilang (missing values)
+# print("\nNilai yang Hilang (Missing Values):")
+# print(missing_values)
+
+
+
+import numpy as np
 
 # Fungsi untuk menghitung jarak Euclidean
 def calculate_euclidean_distance(point1, point2):
@@ -27,21 +57,23 @@ def knn_predict(features, class_labels, query_point, k_neighbors):
     return majority_vote(neighbor_labels)
 
 # Membuat dataset dengan 45 data (10 fitur dan 2 kelas)
-np.random.seed(42)
-feature_data = np.random.randint(1, 100, size=(45, 10))
-class_labels = np.random.choice(['A', 'B'], size=45)
+# Memastikan class_labels diambil dari kolom terakhir
+class_labels = data_after_preprocessing.iloc[:, -1].values
+
+# Menghapus kolom target dari feature data
+features = data_after_preprocessing.iloc[:, :-1].values
 
 # Membagi dataset menjadi train (80%) dan test (20%)
-train_size = int(0.8 * len(feature_data))
-test_size = len(feature_data) - train_size
+train_size = int(0.8 * len(features))
+test_size = len(features) - train_size
 
-train_features = feature_data[:train_size]
+train_features = features[:train_size]
 train_labels = class_labels[:train_size]
-test_features = feature_data[train_size:]
+test_features = features[train_size:]
 test_labels = class_labels[train_size:]
 
-# KNN pada data uji
-k_neighbors = 6
+# Melanjutkan proses KNN seperti sebelumnya
+k_neighbors = 5
 predictions = [knn_predict(train_features, train_labels, test_point, k_neighbors) for test_point in test_features]
 
 # Menghitung metrik evaluasi
@@ -76,6 +108,8 @@ def calculate_metrics(true_labels, predicted_labels):
 
     return metrics
 
+
+# Menghitung metrik evaluasi
 metrics = calculate_metrics(test_labels, predictions)
 
 # Menampilkan hasil

@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # Fungsi untuk menghitung jarak Euclidean
 def calculate_euclidean_distance(point1, point2):
     return np.sqrt(np.sum((np.array(point1) - np.array(point2))**2))
@@ -41,7 +40,7 @@ test_features = feature_data[train_size:]
 test_labels = class_labels[train_size:]
 
 # KNN pada data uji
-k_neighbors = 6
+k_neighbors = 5
 predictions = [knn_predict(train_features, train_labels, test_point, k_neighbors) for test_point in test_features]
 
 # Menghitung metrik evaluasi
