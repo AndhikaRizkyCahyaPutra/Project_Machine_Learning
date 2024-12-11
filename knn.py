@@ -1,5 +1,6 @@
-import numpy as np
+from data_preprocessing import DataPreprocessing
 
+import numpy as np
 
 # Fungsi untuk menghitung jarak Euclidean
 def calculate_euclidean_distance(point1, point2):
@@ -26,22 +27,28 @@ def knn_predict(features, class_labels, query_point, k_neighbors):
     neighbor_labels = [label for _, label in nearest_neighbors]
     return majority_vote(neighbor_labels)
 
-# Membuat dataset dengan 45 data (10 fitur dan 2 kelas)
-np.random.seed(42)
-feature_data = np.random.randint(1, 100, size=(45, 10))
-class_labels = np.random.choice(['A', 'B'], size=45)
+## Membaca dan memproses data menggunakan class DataPreprocessing
+file_path = 'enhanced_fever_medicine_recommendation.csv'
+preprocessor = DataPreprocessing(file_path)
+
+# Menjalankan preprocessing
+data_after_preprocessing = preprocessor.preprocess()
+
+# Lanjutkan dengan menggunakan data yang telah diproses
+class_labels = data_after_preprocessing.iloc[:, -1].values
+features = data_after_preprocessing.iloc[:, :-1].values
 
 # Membagi dataset menjadi train (80%) dan test (20%)
-train_size = int(0.8 * len(feature_data))
-test_size = len(feature_data) - train_size
+train_size = int(0.8 * len(features))
+test_size = len(features) - train_size
 
-train_features = feature_data[:train_size]
+train_features = features[:train_size]
 train_labels = class_labels[:train_size]
-test_features = feature_data[train_size:]
+test_features = features[train_size:]
 test_labels = class_labels[train_size:]
 
-# KNN pada data uji
-k_neighbors = 6
+# Melanjutkan proses KNN seperti sebelumnya
+k_neighbors = 5
 predictions = [knn_predict(train_features, train_labels, test_point, k_neighbors) for test_point in test_features]
 
 # Menghitung metrik evaluasi
@@ -76,6 +83,8 @@ def calculate_metrics(true_labels, predicted_labels):
 
     return metrics
 
+
+# Menghitung metrik evaluasi
 metrics = calculate_metrics(test_labels, predictions)
 
 # Menampilkan hasil
