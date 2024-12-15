@@ -56,12 +56,12 @@ def predict():
 
         input_df = normalize_columns(input_df)
 
-        preprocessing = DataPreprocessing("enhanced_fever_medicine_recommendation.csv", target_column="recommended_medication")
-        data_train = preprocessing.data
+        preprocessing = DataPreprocessing("enhanced_fever_medicine_recommendation.csv", target_column_name="recommended_medication")
+        data_train = preprocessing.raw_data
         data_train = normalize_columns(data_train)
         data_combined = pd.concat([data_train, input_df], ignore_index=True)
 
-        preprocessing.data = data_combined
+        preprocessing.raw_data = data_combined
         data_encoded, target_encoded = preprocessing.preprocess()
 
         X_train = data_encoded.iloc[:-1, :].values
@@ -101,11 +101,11 @@ def evaluate():
         k_value = int(input_data["kValue"])
         test_size = float(input_data["testSize"]) / 100.0
 
-        preprocessing = DataPreprocessing("enhanced_fever_medicine_recommendation.csv", target_column="recommended_medication")
-        data_train = preprocessing.data
+        preprocessing = DataPreprocessing("enhanced_fever_medicine_recommendation.csv", target_column_name="recommended_medication")
+        data_train = preprocessing.raw_data
         data_train = normalize_columns(data_train) 
 
-        preprocessing.data = data_train
+        preprocessing.raw_data = data_train
         data_encoded, target_encoded = preprocessing.preprocess()
 
         features = data_encoded.values
