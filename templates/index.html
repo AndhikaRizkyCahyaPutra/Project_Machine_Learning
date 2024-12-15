@@ -5,205 +5,234 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medication Recommendation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .table-container {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #fff;
+            padding: 20px;
+        }
+        h1 {
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        h4 {
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Medication Recommendation Input</h1>
-        <form id="medicationForm">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="temperature" class="form-label">Temperature (°C)</label>
-                        <input type="number" step="0.1" class="form-control" id="temperature" name="temperature" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="feverSeverity" class="form-label">Fever Severity</label>
-                        <select class="form-select" id="feverSeverity" name="feverSeverity" required>
-                            <option value="Normal">Normal</option>
-                            <option value="Mild">Mild</option>
-                            <option value="Moderate">Moderate</option>
-                            <option value="Severe">Severe</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="number" class="form-control" id="age" name="age" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="gender" class="form-label">Gender</label>
-                        <select class="form-select" id="gender" name="gender" required>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="bmi" class="form-label">BMI</label>
-                        <input type="number" step="0.1" class="form-control" id="bmi" name="bmi" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="headache" class="form-label">Headache</label>
-                        <select class="form-select" id="headache" name="headache" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="bodyAche" class="form-label">Body Ache</label>
-                        <select class="form-select" id="bodyAche" name="bodyAche" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="fatigue" class="form-label">Fatigue</label>
-                        <select class="form-select" id="fatigue" name="fatigue" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="chronicConditions" class="form-label">Chronic Conditions</label>
-                        <select class="form-select" id="chronicConditions" name="chronicConditions" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="allergies" class="form-label">Allergies</label>
-                        <select class="form-select" id="allergies" name="allergies" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="smokingHistory" class="form-label">Smoking History</label>
-                        <select class="form-select" id="smokingHistory" name="smokingHistory" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="alcoholConsumption" class="form-label">Alcohol Consumption</label>
-                        <select class="form-select" id="alcoholConsumption" name="alcoholConsumption" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="humidity" class="form-label">Humidity (%)</label>
-                        <input type="number" step="0.1" class="form-control" id="humidity" name="humidity" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="aqi" class="form-label">Air Quality Index (AQI)</label>
-                        <input type="number" class="form-control" id="aqi" name="aqi" required>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="physicalActivity" class="form-label">Physical Activity</label>
-                        <select class="form-select" id="physicalActivity" name="physicalActivity" required>
-                            <option value="Low">Low</option>
-                            <option value="Moderate">Moderate</option>
-                            <option value="High">High</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="dietType" class="form-label">Diet Type</label>
-                        <select class="form-select" id="dietType" name="dietType" required>
-                            <option value="Vegan">Vegan</option>
-                            <option value="Vegetarian">Vegetarian</option>
-                            <option value="Omnivore">Omnivore</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="heartRate" class="form-label">Heart Rate (bpm)</label>
-                        <input type="number" class="form-control" id="heartRate" name="heartRate" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="bloodPressure" class="form-label">Blood Pressure</label>
-                        <select class="form-select" id="bloodPressure" name="bloodPressure" required>
-                            <option value="Normal">Normal</option>
-                            <option value="High">High</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="previousMedication" class="form-label">Previous Medication</label>
-                <select class="form-select" id="previousMedication" name="previousMedication" required>
-                    <option value="None">None</option>
-                    <option value="Ibuprofen">Ibuprofen</option>
-                    <option value="Paracetamol">Paracetamol</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-
-        <!-- Bagian untuk hasil rekomendasi -->
-        <div class="mt-3">
-            <h4>Recommended Medication: <span id="recommendedMedication">-</span></h4>
+        <h1 class="text-center text-primary">Medication Recommendation</h1>
+         <!-- Button to Evaluation Page -->
+         <div class="text-center mt-4">
+            <a href="/evaluation" class="btn btn-secondary">Halaman KNN Evaluasi</a>
         </div>
-        <div class="mt-3">
+        <!-- Form Section -->
+        <div class="form-card mx-auto col-lg-8">
+            <h4 class="text-center mb-4">Harap mengisi data dibawah ini dengan benar</h4>
+            <form id="medicationForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="temperature" class="form-label">Suhu Badan (°C)</label>
+                            <input type="number" step="0.1" class="form-control" id="temperature" name="temperature" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="feverSeverity" class="form-label">Tingkat Keparahan Demam</label>
+                            <select class="form-select" id="feverSeverity" name="feverSeverity" required>
+                                <option value="Normal">Suhu Normal</option>
+                                <option value="Mild">Mild (Deman Ringan)</option>
+                                <option value="Moderate">Moderate (Demam Sedang)</option>
+                                <option value="Severe">Severe (Demam Tinggi)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Usia</label>
+                            <input type="number" class="form-control" id="age" name="age" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Jenis Kelamin</label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="Male">Laki-Laki</option>
+                                <option value="Female">Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="bmi" class="form-label">BMI (Index Massa Tubuh)</label>
+                            <input type="number" step="0.1" class="form-control" id="bmi" name="bmi" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="headache" class="form-label">Headache (Sakit</label>
+                            <select class="form-select" id="headache" name="headache" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="bodyAche" class="form-label">Body Ache</label>
+                            <select class="form-select" id="bodyAche" name="bodyAche" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="fatigue" class="form-label">Fatigue</label>
+                            <select class="form-select" id="fatigue" name="fatigue" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="chronicConditions" class="form-label">Chronic Conditions</label>
+                            <select class="form-select" id="chronicConditions" name="chronicConditions" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="allergies" class="form-label">Allergies</label>
+                            <select class="form-select" id="allergies" name="allergies" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="smokingHistory" class="form-label">Smoking History</label>
+                            <select class="form-select" id="smokingHistory" name="smokingHistory" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="alcoholConsumption" class="form-label">Alcohol Consumption</label>
+                            <select class="form-select" id="alcoholConsumption" name="alcoholConsumption" required>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="humidity" class="form-label">Humidity (%)</label>
+                            <input type="number" step="0.1" class="form-control" id="humidity" name="humidity" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="aqi" class="form-label">Air Quality Index (AQI)</label>
+                            <input type="number" class="form-control" id="aqi" name="aqi" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="physicalActivity" class="form-label">Physical Activity</label>
+                            <select class="form-select" id="physicalActivity" name="physicalActivity" required>
+                                <option value="Low">Low</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="dietType" class="form-label">Diet Type</label>
+                            <select class="form-select" id="dietType" name="dietType" required>
+                                <option value="Vegan">Vegan</option>
+                                <option value="Vegetarian">Vegetarian</option>
+                                <option value="Omnivore">Omnivore</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="heartRate" class="form-label">Heart Rate (bpm)</label>
+                            <input type="number" class="form-control" id="heartRate" name="heartRate" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="bloodPressure" class="form-label">Blood Pressure</label>
+                            <select class="form-select" id="bloodPressure" name="bloodPressure" required>
+                                <option value="Normal">Normal</option>
+                                <option value="High">High</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="previousMedication" class="form-label">Previous Medication</label>
+                    <select class="form-select" id="previousMedication" name="previousMedication" required>
+                        <option value="None">None</option>
+                        <option value="Ibuprofen">Ibuprofen</option>
+                        <option value="Paracetamol">Paracetamol</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+        <!-- Result Section -->
+        <div class="table-container mt-5">
+            <h4>Recommended Medication:</h4>
+            <p class="fs-5 text-primary"><span id="recommendedMedication">-</span></p>
             <h4>Class Counts:</h4>
-            <ul id="PredictclassCounts">
-                <!-- Informasi jumlah kelas akan diisi di sini -->
+            <ul id="PredictclassCounts" class="list-group">
+                <!-- Class counts will be dynamically populated here -->
             </ul>
-        </div>
 
-        <!-- Tabel Top-k Tetangga -->
-        <div class="mt-5">
-            <h4>Top-k Nearest Neighbors:</h4>
-            <table class="table table-striped">
-                <thead>
+            <!-- Nearest Neighbors Table -->
+            <h4 class="mt-4">Top-k Nearest Neighbors:</h4>
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
                     <tr>
                         <th>#</th>
                         <th>Class</th>
@@ -211,21 +240,20 @@
                     </tr>
                 </thead>
                 <tbody id="neighborsTable">
-                    <!-- Hasil tetangga terdekat akan diisi di sini -->
+                    <!-- Nearest neighbors will be dynamically populated here -->
                 </tbody>
             </table>
         </div>
-
-        <!-- Jumlah kelas masing-masing -->
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('medicationForm').addEventListener('submit', function(event) {
             event.preventDefault();
-    
+
             const formData = new FormData(event.target);
             const data = Object.fromEntries(formData.entries());
-    
+
             fetch('/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -233,23 +261,15 @@
             })
             .then(response => response.json())
             .then(result => {
-                console.log(result.nearest_neighbors);  // Debugging: Periksa respons JSON
-                console.log(result.class_counts);  
-                // Tampilkan hasil rekomendasi
                 document.getElementById('recommendedMedication').innerText = result.recommended_medication;
                 const list = document.getElementById('PredictclassCounts');
                 list.innerHTML = '';
                 for (let predictionclasses in result.class_counts) {
-                    list.innerHTML += `<li>${predictionclasses}: ${result.class_counts[predictionclasses]}</li>`;
+                    list.innerHTML += `<li class="list-group-item">${predictionclasses}: ${result.class_counts[predictionclasses]}</li>`;
                 }
-        
 
                 const tableBody = document.getElementById('neighborsTable');
-
-                // Kosongkan tabel sebelum menambahkan data
                 tableBody.innerHTML = '';
-
-                // Loop melalui data nearest_neighbors dan tambahkan ke tabel
                 result.nearest_neighbors.forEach((neighbor, index) => {
                     const row = `
                         <tr>
@@ -260,10 +280,8 @@
                     `;
                     tableBody.innerHTML += row;
                 });
-
-
-            }).catch(error => console.error('Kesalahan:', error));
+            }).catch(error => console.error('Error:', error));
         });
-        </script>
-    </body>
+    </script>
+</body>
 </html>
