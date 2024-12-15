@@ -179,7 +179,11 @@
             </div>
             <div class="mb-3">
                 <label for="previousMedication" class="form-label">Previous Medication</label>
-                <input type="text" class="form-control" id="previousMedication" name="previousMedication">
+                <select class="form-select" id="previousMedication" name="previousMedication" required>
+                    <option value="None">None</option>
+                    <option value="Ibuprofen">Ibuprofen</option>
+                    <option value="Paracetamol">Paracetamol</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
