@@ -26,12 +26,19 @@ def generate_confusion_matrix(y_true, y_pred, labels):
     """
     Generates a confusion matrix and returns it along with its heatmap as a base64 string.
     """
+    # Map numeric labels to their string equivalents
+    label_mapping = {0: "Bertahan", 1: "Resign"}
+    labels_str = [label_mapping[label] for label in labels]  # Convert numeric labels to string
+
+    # Generate confusion matrix
     cm = confusion_matrix(y_true, y_pred, labels=labels)
+
+    # Plot heatmap
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels, yticklabels=labels)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels_str, yticklabels=labels_str)
     plt.xlabel("Prediksi")
     plt.ylabel("Aktual")
-    plt.title("Confusion Matrix")
+    plt.title("Confusion Matrix untuk Prediksi Kelangsungan Kerja Karyawan\n Dalam 2 Tahun ke Depan.")
 
     # Save the plot to a BytesIO buffer
     buffer = BytesIO()
@@ -41,7 +48,6 @@ def generate_confusion_matrix(y_true, y_pred, labels):
     buffer.close()
 
     return cm, image_base64
-
 
 @app.route('/')
 def index():
@@ -66,7 +72,6 @@ def predict():
             'EverBenched': input_data['everBenched'],
             'ExperienceInCurrentDomain': int(input_data['experienceInCurrentDomain'])
         }])
-
 
         input_df = normalize_columns(input_df)
 
@@ -94,12 +99,23 @@ def predict():
         nearest_neighbors = result["nearest_neighbors"]
         class_counts = result["class_counts"]
 
-        print(f"Hasil prediksi: {prediction}")
+        # Ubah label 0 dan 1 menjadi 'Tidak' dan 'Ya'
+        prediction_label = "Tidak" if prediction == 0 else "Ya"
+        nearest_neighbors = [
+            {**neighbor, "class": "Tidak" if neighbor["class"] == 0 else "Ya"}
+            for neighbor in nearest_neighbors
+        ]
+        class_counts = {
+            "Tidak": class_counts.get(0, 0),
+            "Ya": class_counts.get(1, 0)
+        }
+
+        print(f"Hasil prediksi: {prediction_label}")
         print(f"Tetangga terdekat: {nearest_neighbors}")
         print(f"Jumlah kelas: {class_counts}")
 
         return jsonify({
-            "prediction": str(prediction),
+            "prediction": prediction_label,
             "nearest_neighbors": nearest_neighbors,
             "class_counts": class_counts
         })
@@ -107,7 +123,7 @@ def predict():
     except Exception as e:
         print(f"Error saat prediksi: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
-    
+
     
 @app.route('/evaluate', methods=['POST'])
 @app.route('/evaluate', methods=['POST'])

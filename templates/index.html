@@ -32,17 +32,17 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center text-primary">Medication Recommendation</h1>
+        <h1 class="text-center text-primary">Sistem Prediksi Keberlangsungan kerja karyawan di Perusahaan</h1>
          <!-- Button to Evaluation Page -->
          <div class="text-center mt-4">
             <a href="/evaluation" class="btn btn-secondary">Halaman KNN Evaluasi</a>
         </div>
         <!-- Form Section -->
         <div class="form-card mx-auto col-lg-8">
-            <h4 class="text-center mb-4">Harap mengisi data dibawah ini dengan benar</h4>
+            <h4 class="text-center mb-4">Harap mengisi data karyawan dibawah ini dengan benar</h4>
             <form id="medicationForm">
                 <div class="mb-3">
-                    <label for="education" class="form-label">Education</label>
+                    <label for="education" class="form-label">Pendidikan Terakhir</label>
                     <select class="form-select" id="education" name="education" required>
                         <option value="Bachelors">Bachelors</option>
                         <option value="Masters">Masters</option>
@@ -51,12 +51,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="joiningYear" class="form-label">Joining Year</label>
+                    <label for="joiningYear" class="form-label">Tahun bergabung pada perusahaan</label>
                     <input type="number" class="form-control" id="joiningYear" name="joiningYear" min="2000" max="2024" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="city" class="form-label">City</label>
+                    <label for="city" class="form-label">Kota asal</label>
                     <select class="form-select" id="city" name="city" required>
                         <option value="Bangalore">Bangalore</option>
                         <option value="Pune">Pune</option>
@@ -74,12 +74,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="age" class="form-label">Age</label>
+                    <label for="age" class="form-label">Usia</label>
                     <input type="number" class="form-control" id="age" name="age" min="18" max="65" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="gender" class="form-label">Gender</label>
+                    <label for="gender" class="form-label">Jenis Kelamin</label>
                     <select class="form-select" id="gender" name="gender" required>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="everBenched" class="form-label">Ever Benched</label>
+                    <label for="everBenched" class="form-label">Pernahkah menganggur di Perusahaan (No Project)</label>
                     <select class="form-select" id="everBenched" name="everBenched" required>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="experienceInCurrentDomain" class="form-label">Experience in Current Domain (Years)</label>
+                    <label for="experienceInCurrentDomain" class="form-label">Pengalaman di bidang saat ini (Tahun)</label>
                     <input type="number" class="form-control" id="experienceInCurrentDomain" name="experienceInCurrentDomain" min="0" required>
                 </div>
                 
@@ -105,7 +105,7 @@
 
         <!-- Result Section -->
         <div class="table-container mt-5">
-            <h4>Recommended Medication:</h4>
+            <h4>Prediksi apakah karyawan bertahan di perusahaan dalam 2 tahun ke depan</h4>
             <p class="fs-5 text-primary"><span id="recommendedMedication">-</span></p>
             <h4>Class Counts:</h4>
             <div id="PredictclassCounts" class="row">
