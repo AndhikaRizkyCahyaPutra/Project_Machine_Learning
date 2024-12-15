@@ -14,9 +14,34 @@ from io import BytesIO
 
 app = Flask(__name__)
 
+# Constants
+DATA_FILE_PATH = "enhanced_fever_medicine_recommendation.csv"
+TARGET_COLUMN_NAME = "recommended_medication"
+
 def normalize_columns(df):
     df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
     return df
+
+def generate_confusion_matrix(y_true, y_pred, labels):
+    """
+    Generates a confusion matrix and returns it along with its heatmap as a base64 string.
+    """
+    cm = confusion_matrix(y_true, y_pred, labels=labels)
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels, yticklabels=labels)
+    plt.xlabel("Prediksi")
+    plt.ylabel("Aktual")
+    plt.title("Confusion Matrix")
+
+    # Save the plot to a BytesIO buffer
+    buffer = BytesIO()
+    plt.savefig(buffer, format="png")
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    buffer.close()
+
+    return cm, image_base64
+
 
 @app.route('/')
 def index():
@@ -56,7 +81,7 @@ def predict():
 
         input_df = normalize_columns(input_df)
 
-        preprocessing = DataPreprocessing("enhanced_fever_medicine_recommendation.csv", target_column_name="recommended_medication")
+        preprocessing = DataPreprocessing(DATA_FILE_PATH, target_column_name=TARGET_COLUMN_NAME)
         data_train = preprocessing.raw_data
         data_train = normalize_columns(data_train)
         data_combined = pd.concat([data_train, input_df], ignore_index=True)
@@ -95,15 +120,16 @@ def predict():
     
     
 @app.route('/evaluate', methods=['POST'])
+@app.route('/evaluate', methods=['POST'])
 def evaluate():
     try:
         input_data = request.json
         k_value = int(input_data["kValue"])
         test_size = float(input_data["testSize"]) / 100.0
 
-        preprocessing = DataPreprocessing("enhanced_fever_medicine_recommendation.csv", target_column_name="recommended_medication")
+        preprocessing = DataPreprocessing(DATA_FILE_PATH, target_column_name=TARGET_COLUMN_NAME)
         data_train = preprocessing.raw_data
-        data_train = normalize_columns(data_train) 
+        data_train = normalize_columns(data_train)
 
         preprocessing.raw_data = data_train
         data_encoded, target_encoded = preprocessing.preprocess()
@@ -113,50 +139,33 @@ def evaluate():
 
         X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=test_size, random_state=42)
 
-        print(f"y_train: {y_train}")
-        print(f"y_test: {y_test}")
-
         undersampler = RandomUnderSampler(random_state=42)
         X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
-        print(f"Distribusi y_train setelah undersampling: {Counter(y_resampled)}")
 
         knn = KNearestNeighbors(k_neighbors=k_value)
-        y_pred = [knn.classify(X_resampled, y_resampled, query_point) for query_point in X_test]
+        y_pred = [knn.classify(X_resampled, y_resampled, query_point)["prediction"] for query_point in X_test]
 
-        y_pred_labels = [pred["prediction"] for pred in y_pred]
+        # Generate confusion matrix
+        labels = list(set(y_train))
+        cm, cm_image = generate_confusion_matrix(y_test, y_pred, labels)
 
-        print(f"y_pred: {y_pred_labels}")
-
-        cm = confusion_matrix(y_test, y_pred_labels, labels=list(set(y_train)))
-        precision = precision_score(y_test, y_pred_labels, average='weighted', zero_division=0)
-        recall = recall_score(y_test, y_pred_labels, average='weighted', zero_division=0)
-        accuracy = accuracy_score(y_test, y_pred_labels)
-        f1 = f1_score(y_test, y_pred_labels, average='weighted', zero_division=0)
-
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=list(set(y_train)), yticklabels=list(set(y_train)))
-        plt.xlabel("Prediksi")
-        plt.ylabel("Aktual")
-        plt.title(f"Confusion Matriks (k={k_value}, Ukuran Data Test ={test_size*100:.0f}%)")
-
-        buffer = BytesIO()
-        plt.savefig(buffer, format="png")
-        buffer.seek(0)
-        image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-        buffer.close()
+        # Calculate metrics
+        precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
+        recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
+        accuracy = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred, average='weighted', zero_division=0)
 
         return jsonify({
             "precision": precision,
             "recall": recall,
             "accuracy": accuracy,
             "f1Score": f1,
-            "confusionMatrix": image_base64
+            "confusionMatrix": cm_image
         })
 
     except Exception as e:
         print(f"Error saat evaluasi: {e}")
         return jsonify({"error": str(e)}), 500
-
-
+    
 if __name__ == '__main__':
     app.run(debug=True)
