@@ -225,9 +225,9 @@
             <h4>Recommended Medication:</h4>
             <p class="fs-5 text-primary"><span id="recommendedMedication">-</span></p>
             <h4>Class Counts:</h4>
-            <ul id="PredictclassCounts" class="list-group">
+            <div id="PredictclassCounts" class="row">
                 <!-- Class counts will be dynamically populated here -->
-            </ul>
+            </div>
 
             <!-- Nearest Neighbors Table -->
             <h4 class="mt-4">Top-k Nearest Neighbors:</h4>
@@ -262,10 +262,24 @@
             .then(response => response.json())
             .then(result => {
                 document.getElementById('recommendedMedication').innerText = result.recommended_medication;
+
                 const list = document.getElementById('PredictclassCounts');
                 list.innerHTML = '';
-                for (let predictionclasses in result.class_counts) {
-                    list.innerHTML += `<li class="list-group-item">${predictionclasses}: ${result.class_counts[predictionclasses]}</li>`;
+
+                const totalCount = Object.values(result.class_counts).reduce((a, b) => a + b, 0);
+
+                for (let predictionClass in result.class_counts) {
+                    const count = result.class_counts[predictionClass];
+                    const percentage = ((count / totalCount) * 100).toFixed(2);
+
+                    list.innerHTML += `
+                        <div class="col-6">
+                            <strong>${predictionClass}:</strong>
+                        </div>
+                        <div class="col-6">
+                            ${count} (${percentage}%)
+                        </div>
+                    `;
                 }
 
                 const tableBody = document.getElementById('neighborsTable');
