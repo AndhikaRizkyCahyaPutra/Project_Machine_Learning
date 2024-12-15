@@ -14,9 +14,13 @@ class DataPreprocessing:
         self.target_data = None  # Atribut untuk menyimpan data kolom target
 
     def handle_missing_values(self):
-        """Tangani nilai kosong dalam dataset dengan mengisi nilai kosong dengan 'None'."""
+        """Tangani nilai kosong sesuai dengan tipe datanya."""
         print("Handling missing values...")
-        self.raw_data.fillna('None', inplace=True)
+        for column in self.raw_data.columns:
+            if self.raw_data[column].dtype == 'object':  # Fitur kategorikal
+                self.raw_data[column].fillna('None', inplace=True)
+            else:  # Fitur numerik
+                self.raw_data[column].fillna(self.raw_data[column].mean(), inplace=True)
 
     def separate_target_column(self):
         """Pisahkan kolom target dari data fitur dan simpan data target."""
@@ -49,11 +53,21 @@ class DataPreprocessing:
                 self.preprocessed_data[column] = (self.preprocessed_data[column] - min_value) / (max_value - min_value)
             else:
                 self.preprocessed_data[column] = 0
+                
+    def validate_dataset(self):
+        """Pastikan dataset memiliki format yang benar."""
+        if self.raw_data.empty:
+            raise ValueError("Dataset kosong. Pastikan file berisi data.")
+        if self.target_column_name not in self.raw_data.columns:
+            raise ValueError(f"Kolom target '{self.target_column_name}' tidak ditemukan dalam dataset.")
+        print("Dataset validasi berhasil.")
+
 
     def preprocess(self):
         """Lakukan seluruh tahapan preprocessing pada dataset."""
         print("Starting preprocessing...")
         self.handle_missing_values()
+        self.validate_dataset()
         self.separate_target_column()
         self.encode_categorical_features()
         self.normalize_numerical_features()
