@@ -7,12 +7,13 @@ class DataPreprocessing:
         :param file_path: Path ke file CSV.
         :param target_column_name: Nama kolom target.
         """
+
         self.file_path = file_path
         self.target_column_name = target_column_name
         self.raw_data = pd.read_csv(file_path)
         self.preprocessed_data = None
         self.target_data = None  # Atribut untuk menyimpan data kolom target
-
+        
     def handle_missing_values(self):
         """Tangani nilai kosong sesuai dengan tipe datanya."""
         print("Handling missing values...")

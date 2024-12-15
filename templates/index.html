@@ -41,181 +41,64 @@
         <div class="form-card mx-auto col-lg-8">
             <h4 class="text-center mb-4">Harap mengisi data dibawah ini dengan benar</h4>
             <form id="medicationForm">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="temperature" class="form-label">Suhu Badan (°C)</label>
-                            <input type="number" step="0.1" class="form-control" id="temperature" name="temperature" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="feverSeverity" class="form-label">Tingkat Keparahan Demam</label>
-                            <select class="form-select" id="feverSeverity" name="feverSeverity" required>
-                                <option value="Normal">Suhu Normal</option>
-                                <option value="Mild">Mild (Deman Ringan)</option>
-                                <option value="Moderate">Moderate (Demam Sedang)</option>
-                                <option value="Severe">Severe (Demam Tinggi)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="age" class="form-label">Usia</label>
-                            <input type="number" class="form-control" id="age" name="age" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Jenis Kelamin</label>
-                            <select class="form-select" id="gender" name="gender" required>
-                                <option value="Male">Laki-Laki</option>
-                                <option value="Female">Perempuan</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="bmi" class="form-label">BMI (Index Massa Tubuh)</label>
-                            <input type="number" step="0.1" class="form-control" id="bmi" name="bmi" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="headache" class="form-label">Headache (Sakit</label>
-                            <select class="form-select" id="headache" name="headache" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="bodyAche" class="form-label">Body Ache</label>
-                            <select class="form-select" id="bodyAche" name="bodyAche" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="fatigue" class="form-label">Fatigue</label>
-                            <select class="form-select" id="fatigue" name="fatigue" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="chronicConditions" class="form-label">Chronic Conditions</label>
-                            <select class="form-select" id="chronicConditions" name="chronicConditions" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="allergies" class="form-label">Allergies</label>
-                            <select class="form-select" id="allergies" name="allergies" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="smokingHistory" class="form-label">Smoking History</label>
-                            <select class="form-select" id="smokingHistory" name="smokingHistory" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="alcoholConsumption" class="form-label">Alcohol Consumption</label>
-                            <select class="form-select" id="alcoholConsumption" name="alcoholConsumption" required>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="humidity" class="form-label">Humidity (%)</label>
-                            <input type="number" step="0.1" class="form-control" id="humidity" name="humidity" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="aqi" class="form-label">Air Quality Index (AQI)</label>
-                            <input type="number" class="form-control" id="aqi" name="aqi" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="physicalActivity" class="form-label">Physical Activity</label>
-                            <select class="form-select" id="physicalActivity" name="physicalActivity" required>
-                                <option value="Low">Low</option>
-                                <option value="Moderate">Moderate</option>
-                                <option value="High">High</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="dietType" class="form-label">Diet Type</label>
-                            <select class="form-select" id="dietType" name="dietType" required>
-                                <option value="Vegan">Vegan</option>
-                                <option value="Vegetarian">Vegetarian</option>
-                                <option value="Omnivore">Omnivore</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="heartRate" class="form-label">Heart Rate (bpm)</label>
-                            <input type="number" class="form-control" id="heartRate" name="heartRate" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="bloodPressure" class="form-label">Blood Pressure</label>
-                            <select class="form-select" id="bloodPressure" name="bloodPressure" required>
-                                <option value="Normal">Normal</option>
-                                <option value="High">High</option>
-                                <option value="Low">Low</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
                 <div class="mb-3">
-                    <label for="previousMedication" class="form-label">Previous Medication</label>
-                    <select class="form-select" id="previousMedication" name="previousMedication" required>
-                        <option value="None">None</option>
-                        <option value="Ibuprofen">Ibuprofen</option>
-                        <option value="Paracetamol">Paracetamol</option>
+                    <label for="education" class="form-label">Education</label>
+                    <select class="form-select" id="education" name="education" required>
+                        <option value="Bachelors">Bachelors</option>
+                        <option value="Masters">Masters</option>
+                        <option value="PhD">PhD</option>
                     </select>
                 </div>
+
+                <div class="mb-3">
+                    <label for="joiningYear" class="form-label">Joining Year</label>
+                    <input type="number" class="form-control" id="joiningYear" name="joiningYear" min="2000" max="2024" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <select class="form-select" id="city" name="city" required>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Pune">Pune</option>
+                        <option value="New Delhi">New Delhi</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="paymentTier" class="form-label">Payment Tier</label>
+                    <select class="form-select" id="paymentTier" name="paymentTier" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" class="form-control" id="age" name="age" min="18" max="65" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-select" id="gender" name="gender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="everBenched" class="form-label">Ever Benched</label>
+                    <select class="form-select" id="everBenched" name="everBenched" required>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="experienceInCurrentDomain" class="form-label">Experience in Current Domain (Years)</label>
+                    <input type="number" class="form-control" id="experienceInCurrentDomain" name="experienceInCurrentDomain" min="0" required>
+                </div>
+                
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

@@ -15,8 +15,8 @@ from io import BytesIO
 app = Flask(__name__)
 
 # Constants
-DATA_FILE_PATH = "enhanced_fever_medicine_recommendation.csv"
-TARGET_COLUMN_NAME = "recommended_medication"
+DATA_FILE_PATH = "employee_dataset.csv"
+TARGET_COLUMN_NAME = "leaveornot"
 
 def normalize_columns(df):
     df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
@@ -56,34 +56,24 @@ def predict():
     try:
         input_data = request.json
         print(f"Data diterima: {input_data}")
-
         input_df = pd.DataFrame([{
-            'temperature': float(input_data['temperature']),
-            'fever_severity': input_data['feverSeverity'],
-            'age': int(input_data['age']),
-            'gender': input_data['gender'],
-            'bmi': float(input_data['bmi']),
-            'headache': input_data['headache'],
-            'body_ache': input_data['bodyAche'],
-            'fatigue': input_data['fatigue'],
-            'chronic_conditions': input_data['chronicConditions'],
-            'allergies': input_data['allergies'],
-            'smoking_history': input_data['smokingHistory'],
-            'alcohol_consumption': input_data['alcoholConsumption'],
-            'humidity': float(input_data['humidity']),
-            'aqi': float(input_data['aqi']),
-            'physical_activity': input_data['physicalActivity'],
-            'diet_type': input_data['dietType'],
-            'heart_rate': float(input_data['heartRate']),
-            'blood_pressure': input_data['bloodPressure'],
-            'previous_medication': input_data['previousMedication']
+            'Education': input_data['education'],
+            'JoiningYear': int(input_data['joiningYear']),
+            'City': input_data['city'],
+            'PaymentTier': int(input_data['paymentTier']),
+            'Age': int(input_data['age']),
+            'Gender': input_data['gender'],
+            'EverBenched': input_data['everBenched'],
+            'ExperienceInCurrentDomain': int(input_data['experienceInCurrentDomain'])
         }])
+
 
         input_df = normalize_columns(input_df)
 
         preprocessing = DataPreprocessing(DATA_FILE_PATH, target_column_name=TARGET_COLUMN_NAME)
         data_train = preprocessing.raw_data
         data_train = normalize_columns(data_train)
+        print(data_train)
         data_combined = pd.concat([data_train, input_df], ignore_index=True)
 
         preprocessing.raw_data = data_combined
