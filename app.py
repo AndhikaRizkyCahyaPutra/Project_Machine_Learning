@@ -84,7 +84,7 @@ def predict():
         print(f"Jumlah kelas: {class_counts}")
 
         return jsonify({
-            "recommended_medication": str(prediction),
+            "prediction": str(prediction),
             "nearest_neighbors": nearest_neighbors,
             "class_counts": class_counts
         })

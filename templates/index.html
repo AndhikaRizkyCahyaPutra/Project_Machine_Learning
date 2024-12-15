@@ -261,7 +261,10 @@
             })
             .then(response => response.json())
             .then(result => {
-                document.getElementById('recommendedMedication').innerText = result.prediction;
+                const prediction = result['prediction'] || "No prediction available";  // Default message if undefined
+                document.getElementById('recommendedMedication').innerText = prediction;
+            
+                // Handle other parts of the response similarl
 
                 const list = document.getElementById('PredictclassCounts');
                 list.innerHTML = '';
