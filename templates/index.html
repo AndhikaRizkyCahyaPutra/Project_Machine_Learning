@@ -261,7 +261,7 @@
             })
             .then(response => response.json())
             .then(result => {
-                document.getElementById('recommendedMedication').innerText = result.recommended_medication;
+                document.getElementById('recommendedMedication').innerText = result.prediction;
 
                 const list = document.getElementById('PredictclassCounts');
                 list.innerHTML = '';

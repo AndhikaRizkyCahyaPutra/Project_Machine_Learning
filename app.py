@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from data_preprocessing import DataPreprocessing
-from knn import KNN
+from knn import KNearestNeighbors
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -72,8 +72,8 @@ def predict():
         X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
         print(f"Distribusi y_train setelah undersampling: {Counter(y_resampled)}")
 
-        knn = KNN(k_neighbors=150)
-        result = knn.predict(X_resampled, y_resampled, features)
+        knn = KNearestNeighbors(k_neighbors=150)
+        result = knn.classify(X_resampled, y_resampled, features)
 
         prediction = result["prediction"]
         nearest_neighbors = result["nearest_neighbors"]
@@ -120,8 +120,8 @@ def evaluate():
         X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
         print(f"Distribusi y_train setelah undersampling: {Counter(y_resampled)}")
 
-        knn = KNN(k_neighbors=k_value)
-        y_pred = [knn.predict(X_resampled, y_resampled, query_point) for query_point in X_test]
+        knn = KNearestNeighbors(k_neighbors=k_value)
+        y_pred = [knn.classify(X_resampled, y_resampled, query_point) for query_point in X_test]
 
         y_pred_labels = [pred["prediction"] for pred in y_pred]
 
