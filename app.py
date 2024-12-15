@@ -15,8 +15,8 @@ from io import BytesIO
 app = Flask(__name__)
 
 # Constants
-DATA_FILE_PATH = "enhanced_fever_medicine_recommendation.csv"
-TARGET_COLUMN_NAME = "recommended_medication"
+DATA_FILE_PATH = "employee_dataset.csv"
+TARGET_COLUMN_NAME = "leaveornot"
 
 def normalize_columns(df):
     df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
@@ -26,12 +26,19 @@ def generate_confusion_matrix(y_true, y_pred, labels):
     """
     Generates a confusion matrix and returns it along with its heatmap as a base64 string.
     """
+    # Map numeric labels to their string equivalents
+    label_mapping = {0: "Bertahan", 1: "Resign"}
+    labels_str = [label_mapping[label] for label in labels]  # Convert numeric labels to string
+
+    # Generate confusion matrix
     cm = confusion_matrix(y_true, y_pred, labels=labels)
+
+    # Plot heatmap
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels, yticklabels=labels)
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels_str, yticklabels=labels_str)
     plt.xlabel("Prediksi")
     plt.ylabel("Aktual")
-    plt.title("Confusion Matrix")
+    plt.title("Confusion Matrix untuk Prediksi Kelangsungan Kerja Karyawan\n Dalam 2 Tahun ke Depan.")
 
     # Save the plot to a BytesIO buffer
     buffer = BytesIO()
@@ -41,7 +48,6 @@ def generate_confusion_matrix(y_true, y_pred, labels):
     buffer.close()
 
     return cm, image_base64
-
 
 @app.route('/')
 def index():
@@ -56,27 +62,15 @@ def predict():
     try:
         input_data = request.json
         print(f"Data diterima: {input_data}")
-
         input_df = pd.DataFrame([{
-            'temperature': float(input_data['temperature']),
-            'fever_severity': input_data['feverSeverity'],
-            'age': int(input_data['age']),
-            'gender': input_data['gender'],
-            'bmi': float(input_data['bmi']),
-            'headache': input_data['headache'],
-            'body_ache': input_data['bodyAche'],
-            'fatigue': input_data['fatigue'],
-            'chronic_conditions': input_data['chronicConditions'],
-            'allergies': input_data['allergies'],
-            'smoking_history': input_data['smokingHistory'],
-            'alcohol_consumption': input_data['alcoholConsumption'],
-            'humidity': float(input_data['humidity']),
-            'aqi': float(input_data['aqi']),
-            'physical_activity': input_data['physicalActivity'],
-            'diet_type': input_data['dietType'],
-            'heart_rate': float(input_data['heartRate']),
-            'blood_pressure': input_data['bloodPressure'],
-            'previous_medication': input_data['previousMedication']
+            'Education': input_data['education'],
+            'JoiningYear': int(input_data['joiningYear']),
+            'City': input_data['city'],
+            'PaymentTier': int(input_data['paymentTier']),
+            'Age': int(input_data['age']),
+            'Gender': input_data['gender'],
+            'EverBenched': input_data['everBenched'],
+            'ExperienceInCurrentDomain': int(input_data['experienceInCurrentDomain'])
         }])
 
         input_df = normalize_columns(input_df)
@@ -84,6 +78,7 @@ def predict():
         preprocessing = DataPreprocessing(DATA_FILE_PATH, target_column_name=TARGET_COLUMN_NAME)
         data_train = preprocessing.raw_data
         data_train = normalize_columns(data_train)
+        print(data_train)
         data_combined = pd.concat([data_train, input_df], ignore_index=True)
 
         preprocessing.raw_data = data_combined
@@ -104,12 +99,23 @@ def predict():
         nearest_neighbors = result["nearest_neighbors"]
         class_counts = result["class_counts"]
 
-        print(f"Hasil prediksi: {prediction}")
+        # Ubah label 0 dan 1 menjadi 'Tidak' dan 'Ya'
+        prediction_label = "Tidak" if prediction == 0 else "Ya"
+        nearest_neighbors = [
+            {**neighbor, "class": "Tidak" if neighbor["class"] == 0 else "Ya"}
+            for neighbor in nearest_neighbors
+        ]
+        class_counts = {
+            "Tidak": class_counts.get(0, 0),
+            "Ya": class_counts.get(1, 0)
+        }
+
+        print(f"Hasil prediksi: {prediction_label}")
         print(f"Tetangga terdekat: {nearest_neighbors}")
         print(f"Jumlah kelas: {class_counts}")
 
         return jsonify({
-            "prediction": str(prediction),
+            "prediction": prediction_label,
             "nearest_neighbors": nearest_neighbors,
             "class_counts": class_counts
         })
@@ -117,7 +123,7 @@ def predict():
     except Exception as e:
         print(f"Error saat prediksi: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
-    
+
     
 @app.route('/evaluate', methods=['POST'])
 @app.route('/evaluate', methods=['POST'])
