@@ -1,13 +1,29 @@
 import math
 
 class KNearestNeighbors:
-    def __init__(self, k_neighbors=7):
+    def __init__(self, k_neighbors=7, distance_metric="euclidean", minkowski_p=2):
         self.k_neighbors = k_neighbors
+        self.distance_metric = distance_metric  
+        self.minkowski_p = minkowski_p  
 
     def calculate_distance(self, point_a, point_b):
         if len(point_a) != len(point_b):
             raise ValueError("Dimensi kedua titik harus sama.")
-        return math.sqrt(sum((float(a) - float(b)) ** 2 for a, b in zip(point_a, point_b)))
+
+        if self.distance_metric == "euclidean":
+            return math.sqrt(sum((float(a) - float(b)) ** 2 for a, b in zip(point_a, point_b)))
+
+        elif self.distance_metric == "manhattan":
+            return sum(abs(float(a) - float(b)) for a, b in zip(point_a, point_b))
+
+        elif self.distance_metric == "hamming":
+            return sum(a != b for a, b in zip(point_a, point_b))
+
+        elif self.distance_metric == "minkowski":
+            return sum(abs(float(a) - float(b)) ** self.minkowski_p for a, b in zip(point_a, point_b)) ** (1 / self.minkowski_p)
+
+        else:
+            raise ValueError("Metode jarak tidak valid. Pilih 'euclidean', 'manhattan', 'hamming', atau 'minkowski'.")
 
     def find_nearest_neighbors(self, feature_data, labels, test_point):
         distances = [
