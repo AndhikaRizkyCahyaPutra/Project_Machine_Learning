@@ -92,7 +92,7 @@ def predict():
         X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
         print(f"Distribusi y_train setelah undersampling: {Counter(y_resampled)}")
 
-        knn = KNearestNeighbors(k_neighbors=150)
+        knn = KNearestNeighbors(k_neighbors=7)
         result = knn.classify(X_resampled, y_resampled, features)
 
         prediction = result["prediction"]
