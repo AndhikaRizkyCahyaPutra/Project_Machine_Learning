@@ -145,7 +145,7 @@ def evaluate():
         kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
 
         # Range of k (only odd numbers from 1 to 10)
-        k_values = [1, 3, 5, 7, 9]
+        k_values = list(range(1, 201, 2))
         k_scores = {}
         all_metrics = {}
 

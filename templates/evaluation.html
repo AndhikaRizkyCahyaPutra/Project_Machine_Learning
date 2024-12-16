@@ -16,27 +16,33 @@
         }
 
         .btn-primary {
-            background-color:#343a40;
-            border-color:rgb(23, 24, 26);
+            background-color: #343a40;
+            border-color: rgb(23, 24, 26);
             font-size: 0.9rem;
             padding: 0.5rem 1rem;
         }
 
         .btn-primary:hover {
-            background-color:rgb(58, 59, 61);
-            border-color:rgb(0, 0, 0);
+            background-color: rgb(58, 59, 61);
+            border-color: rgb(0, 0, 0);
         }
+
         .btn-primary {
             transition: background-color 0.3s, border-color 0.3s;
         }
-        
-        
+
         h1, h3 {
             color: #343a40;
         }
 
         .table-striped>tbody>tr:nth-of-type(odd) {
             background-color: #e9ecef;
+        }
+
+        .processing {
+            font-weight: bold;
+            color: #6c757d;
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -51,29 +57,44 @@
         </div>
         <div class="card shadow-sm mt-4">
             <div class="card-header bg-secondary text-white text-center">
-                <h5 class="mb-0 ">Parameter Input</h5>
+                <h5 class="mb-0">Evaluasi Model</h5>
             </div>
-            <div class="card-body">
-                <form id="evaluationForm">
-                    <div class="mb-3">
-                        <label for="kValue" class="form-label">Jumlah Tetangga Terdekat (Nilai K)</label>
-                        <input type="number" class="form-control" id="kValue" name="kValue" min="1" value="5" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="testSize" class="form-label">Ukuran Data Test (persentase)</label>
-                        <input type="number" class="form-control" id="testSize" name="testSize" min="10" max="90"
-                            value="20" required>
-                    </div>
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary">Evaluasi Model</button>
-                    </div>
-                </form>
+            <div class="card-body text-center">
+                <button id="evaluateButton" class="btn btn-primary">Evaluasi Model</button>
+                <div id="processingSection" class="mt-4 d-none">
+                    <p id="processingText" class="processing">Sedang diproses...</p>
+                </div>
             </div>
         </div>
 
         <div id="result" class="mt-5 d-none">
             <div class="text-center">
                 <h3>Hasil</h3>
+            </div>
+            <div class="text-center mt-4">
+                <h4 class="text-primary" id="bestK">Nilai K Terbaik: -</h4>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white text-center">
+                            <h5 class="mb-0">Tabel Nilai K dan F1 Score</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Nilai K</th>
+                                        <th>F1 Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kScores">
+                                    <!-- Placeholder for K Scores -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row mt-4">
                 <!-- Confusion Matrix -->
@@ -133,30 +154,52 @@
     </div>
 
     <script>
-        document.getElementById("evaluationForm").addEventListener("submit", async (event) => {
-            event.preventDefault();
+        document.getElementById("evaluateButton").addEventListener("click", async () => {
+            const processingSection = document.getElementById("processingSection");
+            const processingText = document.getElementById("processingText");
+            const resultSection = document.getElementById("result");
 
-            const kValue = document.getElementById("kValue").value;
-            const testSize = document.getElementById("testSize").value;
+            processingSection.classList.remove("d-none");
+            let dots = 0;
+
+            // Animation loop for "Sedang diproses..."
+            const animationInterval = setInterval(() => {
+                dots = (dots + 1) % 4;
+                processingText.textContent = `Sedang diproses${".".repeat(dots)}`;
+            }, 500);
 
             // Fetch API Call to Evaluate Model
             const response = await fetch('/evaluate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ kValue: kValue, testSize: testSize })
+                body: JSON.stringify({})
             });
 
+            clearInterval(animationInterval);
+            processingSection.classList.add("d-none");
+
             const result = await response.json();
-            const resultSection = document.getElementById("result");
             resultSection.classList.remove("d-none");
 
             if (result.error) {
-                document.getElementById("metrics").innerHTML = `
+                document.getElementById("kScores").innerHTML = `
                     <tr>
                         <td colspan="2" class="text-danger text-center">${result.error}</td>
                     </tr>`;
                 return;
             }
+
+            // Display Best K
+            document.getElementById("bestK").textContent = `Nilai K Terbaik: ${result.bestK}`;
+
+            // Update K Scores Table
+            const kScoresTable = Object.entries(result.allKScores).map(([k, f1]) => `
+                <tr>
+                    <td>${k}</td>
+                    <td>${f1.toFixed(2)}</td>
+                </tr>
+            `).join('');
+            document.getElementById("kScores").innerHTML = kScoresTable;
 
             // Display Confusion Matrix
             document.getElementById("confusionMatrix").innerHTML = `
