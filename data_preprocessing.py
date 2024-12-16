@@ -13,29 +13,25 @@ class DataPreprocessing:
         self.target_column_name = target_column_name
         self.raw_data = pd.read_csv(file_path)
         self.preprocessed_data = None
-        self.target_data = None  # Atribut untuk menyimpan data kolom target
+        self.target_data = None  
         
     def handle_missing_values(self):
-        """Tangani nilai kosong sesuai dengan tipe datanya."""
         print("Handling missing values...")
         for column in self.raw_data.columns:
-            if self.raw_data[column].dtype == 'object':  # Fitur kategorikal
+            if self.raw_data[column].dtype == 'object':  
                 self.raw_data[column].fillna('None', inplace=True)
-            else:  # Fitur numerik
+            else:  
                 self.raw_data[column].fillna(self.raw_data[column].mean(), inplace=True)
 
     def separate_target_column(self):
-        """Pisahkan kolom target dari data fitur dan simpan data target."""
         if self.target_column_name not in self.raw_data.columns:
             print(f"Kolom yang tersedia dalam dataset: {self.raw_data.columns.tolist()}")
             raise ValueError(f"Kolom target '{self.target_column_name}' tidak ditemukan dalam dataset.")
-        # Pisahkan kolom target dan hapus dari data fitur
         print(f"Memisahkan kolom target: {self.target_column_name}")
         self.target_data = self.raw_data[self.target_column_name]
         self.raw_data.drop(columns=[self.target_column_name], inplace=True)
 
     def encode_categorical_features(self):
-        """Lakukan one-hot encoding pada fitur kategorikal."""
         if self.raw_data is None or self.raw_data.empty:
             raise ValueError("Data belum diproses atau kosong. Pastikan metode sebelumnya sudah dijalankan.")
         print("Encoding categorical features...")
@@ -43,7 +39,6 @@ class DataPreprocessing:
         self.preprocessed_data = pd.get_dummies(self.raw_data, columns=categorical_columns, drop_first=True)
 
     def normalize_numerical_features(self):
-        """Normalisasi fitur numerik agar berada dalam skala 0-1."""
         if self.preprocessed_data is None or self.preprocessed_data.empty:
             raise ValueError("Data belum tersedia untuk normalisasi. Pastikan encoding telah dilakukan.")
         print("Normalizing numerical features...")
@@ -57,7 +52,6 @@ class DataPreprocessing:
                 self.preprocessed_data[column] = 0
                 
     def validate_dataset(self):
-        """Pastikan dataset memiliki format yang benar."""
         if self.raw_data.empty:
             raise ValueError("Dataset kosong. Pastikan file berisi data.")
         if self.target_column_name not in self.raw_data.columns:
