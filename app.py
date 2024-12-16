@@ -125,14 +125,16 @@ def predict():
         return jsonify({"error": "Internal Server Error"}), 500
 
     
-@app.route('/evaluate', methods=['POST'])
+from sklearn.model_selection import KFold
+
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
     try:
         input_data = request.json
-        k_value = int(input_data["kValue"])
-        test_size = float(input_data["testSize"]) / 100.0
+        k_value = int(input_data["kValue"])  # Nilai K untuk KNN
+        num_folds = 5  # Jumlah fold untuk k-fold validation
 
+        # Preprocessing data
         preprocessing = DataPreprocessing(DATA_FILE_PATH, target_column_name=TARGET_COLUMN_NAME)
         data_train = preprocessing.raw_data
         data_train = normalize_columns(data_train)
@@ -143,29 +145,44 @@ def evaluate():
         features = data_encoded.values
         labels = target_encoded.values
 
-        X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=test_size, random_state=42)
+        # K-Fold Cross Validation
+        kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
 
-        undersampler = RandomUnderSampler(random_state=42)
-        X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
+        precision_scores, recall_scores, accuracy_scores, f1_scores = [], [], [], []
 
-        knn = KNearestNeighbors(k_neighbors=k_value)
-        y_pred = [knn.classify(X_resampled, y_resampled, query_point)["prediction"] for query_point in X_test]
+        for train_index, test_index in kf.split(features):
+            X_train, X_test = features[train_index], features[test_index]
+            y_train, y_test = labels[train_index], labels[test_index]
 
-        # Generate confusion matrix
-        labels = list(set(y_train))
-        cm, cm_image = generate_confusion_matrix(y_test, y_pred, labels)
+            # Undersampling untuk menangani class imbalance
+            undersampler = RandomUnderSampler(random_state=42)
+            X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
 
-        # Calculate metrics
-        precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
-        recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
-        accuracy = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred, average='weighted', zero_division=0)
+            # KNN Evaluation
+            knn = KNearestNeighbors(k_neighbors=k_value)
+            y_pred = [knn.classify(X_resampled, y_resampled, query_point)["prediction"] for query_point in X_test]
+
+            # Calculate Metrics for the Current Fold
+            precision_scores.append(precision_score(y_test, y_pred, average='weighted', zero_division=0))
+            recall_scores.append(recall_score(y_test, y_pred, average='weighted', zero_division=0))
+            accuracy_scores.append(accuracy_score(y_test, y_pred))
+            f1_scores.append(f1_score(y_test, y_pred, average='weighted', zero_division=0))
+
+        # Calculate Average Metrics Across Folds
+        avg_precision = np.mean(precision_scores)
+        avg_recall = np.mean(recall_scores)
+        avg_accuracy = np.mean(accuracy_scores)
+        avg_f1 = np.mean(f1_scores)
+
+        # Confusion Matrix (Optional: Generate for the Last Fold)
+        labels_set = list(set(labels))
+        cm, cm_image = generate_confusion_matrix(y_test, y_pred, labels_set)
 
         return jsonify({
-            "precision": precision,
-            "recall": recall,
-            "accuracy": accuracy,
-            "f1Score": f1,
+            "precision": avg_precision,
+            "recall": avg_recall,
+            "accuracy": avg_accuracy,
+            "f1Score": avg_f1,
             "confusionMatrix": cm_image
         })
 

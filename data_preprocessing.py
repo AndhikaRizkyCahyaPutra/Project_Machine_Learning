@@ -1,4 +1,6 @@
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class DataPreprocessing:
     def __init__(self, file_path, target_column_name):
@@ -7,7 +9,6 @@ class DataPreprocessing:
         :param file_path: Path ke file CSV.
         :param target_column_name: Nama kolom target.
         """
-
         self.file_path = file_path
         self.target_column_name = target_column_name
         self.raw_data = pd.read_csv(file_path)
@@ -63,7 +64,30 @@ class DataPreprocessing:
             raise ValueError(f"Kolom target '{self.target_column_name}' tidak ditemukan dalam dataset.")
         print("Dataset validasi berhasil.")
 
+    def visualize_correlation(self):
+        """Visualisasikan korelasi antar fitur, termasuk kolom target."""
+        if self.preprocessed_data is None or self.preprocessed_data.empty:
+            raise ValueError("Data belum tersedia untuk visualisasi. Pastikan preprocessing telah dilakukan.")
+        
+        print("Visualizing correlation matrix with target...")
+        
+        # Tambahkan kolom target ke data untuk korelasi
+        if self.target_data is None:
+            raise ValueError("Kolom target tidak tersedia. Pastikan pemisahan target telah dilakukan.")
+        
+        data_with_target = self.preprocessed_data.copy()
+        data_with_target[self.target_column_name] = self.target_data
+        
+        # Hitung korelasi
+        correlation_matrix = data_with_target.corr()
+        
+        # Visualisasi matriks korelasi
+        plt.figure(figsize=(12, 8))
+        sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar=True)
+        plt.title('Korelasi Antar Fitur dan Target')
+        plt.show()
 
+    
     def preprocess(self):
         """Lakukan seluruh tahapan preprocessing pada dataset."""
         print("Starting preprocessing...")
