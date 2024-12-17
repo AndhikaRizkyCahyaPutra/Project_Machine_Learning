@@ -75,7 +75,6 @@ def predict():
 
         preprocessing.raw_data = data_combined
         data_encoded, target_encoded = preprocessing.preprocess()
-
         X_train = data_encoded.iloc[:-1, :].values
         y_train = target_encoded.iloc[:-1].values
         features = data_encoded.iloc[-1, :].values
@@ -84,7 +83,7 @@ def predict():
         X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
         print(f"Distribusi y_train setelah undersampling: {Counter(y_resampled)}")
 
-        knn = KNearestNeighbors(k_neighbors=7)
+        knn = KNearestNeighbors(k_neighbors=7, distance_metric="manhattan")
         result = knn.classify(X_resampled, y_resampled, features)
 
         prediction = result["prediction"]
@@ -133,7 +132,7 @@ def evaluate():
         num_folds = 5  
         kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
 
-        k_values = list(range(1, 201, 2))
+        k_values = [7]
         k_scores = {}
         all_metrics = {}
 
@@ -147,7 +146,7 @@ def evaluate():
                 undersampler = RandomUnderSampler(random_state=42)
                 X_resampled, y_resampled = undersampler.fit_resample(X_train, y_train)
 
-                knn = KNearestNeighbors(k_neighbors=k)
+                knn = KNearestNeighbors(k_neighbors=k, distance_metric="manhattan")
                 y_pred = [knn.classify(X_resampled, y_resampled, query_point)["prediction"] for query_point in X_test]
 
                 precision_scores.append(precision_score(y_test, y_pred, average='weighted', zero_division=0))

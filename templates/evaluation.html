@@ -196,7 +196,7 @@
             const kScoresTable = Object.entries(result.allKScores).map(([k, f1]) => `
                 <tr>
                     <td>${k}</td>
-                    <td>${f1.toFixed(2)}</td>
+                    <td>${f1.toFixed(5)}</td>
                 </tr>
             `).join('');
             document.getElementById("kScores").innerHTML = kScoresTable;
@@ -210,19 +210,19 @@
             document.getElementById("metrics").innerHTML = `
                 <tr>
                     <td><strong>Precision</strong></td>
-                    <td>${result.precision.toFixed(2)}</td>
+                    <td>${result.precision.toFixed(5)}</td>
                 </tr>
                 <tr>
                     <td><strong>Recall</strong></td>
-                    <td>${result.recall.toFixed(2)}</td>
+                    <td>${result.recall.toFixed(5)}</td>
                 </tr>
                 <tr>
                     <td><strong>Accuracy</strong></td>
-                    <td>${result.accuracy.toFixed(2)}</td>
+                    <td>${result.accuracy.toFixed(5)}</td>
                 </tr>
                 <tr>
                     <td><strong>F1-Score</strong></td>
-                    <td>${result.f1Score.toFixed(2)}</td>
+                    <td>${result.f1Score.toFixed(5)}</td>
                 </tr>
             `;
         });
